@@ -66,22 +66,7 @@ const Logo: React.FC<LogoProps> = ({
         />
       )}
       {wordmark && !wordmarkSrc && (
-        <div
-          style={{
-            height: `var(--static-space-${sizeMap[size]})`,
-          }}
-          className={styles.type}
-        />
-      )}
-      {wordmarkSrc && (
-        <img
-          style={{
-            height: `var(--static-space-${sizeMap[size]})`,
-            width: "auto",
-          }}
-          alt="Trademark"
-          src={wordmarkSrc}
-        />
+        <h2 style={{marginLeft:14,fontSize:16}}>Orden Médica Digital</h2>
       )}
     </>
   );
@@ -103,6 +88,8 @@ const Logo: React.FC<LogoProps> = ({
       fitHeight
       style={style}
       aria-label="Trademark"
+      vertical="center"
+      horizontal="center"
     >
       {content}
     </Flex>

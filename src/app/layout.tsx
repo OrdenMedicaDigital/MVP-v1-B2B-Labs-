@@ -6,10 +6,13 @@ import { headers } from "next/headers";
 import { Metadata } from "next";
 
 import { baseURL, style, meta, og, schema, social } from "@/once-ui/resources/config";
-import { Background, Column, Flex, ToastProvider } from "@/once-ui/components";
+import { Background, Column, Flex, Row, ToastProvider } from "@/once-ui/components";
 
 import { Inter } from "next/font/google";
 import { Roboto_Mono } from "next/font/google";
+import { Header, Sidebar } from "@/once-ui/modules";
+import BlackBackround from "@/components/BlackBaground";
+import Main from "@/components/Main";
 
 const primary = Inter({
   variable: "--font-primary",
@@ -125,7 +128,7 @@ export default function RootLayout({
         />
       </head>
       <ToastProvider>
-        <Column as="body" fillWidth  margin="0" padding="0">
+        <Row as="body" fillWidth  margin="0" padding="0">
           <Background
             position="absolute"
             mask={{
@@ -151,9 +154,13 @@ export default function RootLayout({
               color: "neutral-alpha-medium",
               height: "0.25rem",
             }}
+            zIndex={-1}
           />
-          {children}
-        </Column>
+          <Sidebar />
+          <Main>
+            {children}
+          </Main>
+        </Row>
       </ToastProvider>
     </Flex>
   );

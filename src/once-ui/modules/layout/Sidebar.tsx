@@ -1,10 +1,26 @@
 "use client";
 
-import { Column, Icon, IconButton, Line, Row, Tag, Text, ToggleButton } from "@/once-ui/components";
+import { useSidebarStore } from "@/app/store/sidebar";
+import { Column, Icon, IconButton, Line, Row, SmartLink, Tag, Text, ToggleButton } from "@/once-ui/components";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Sidebar: React.FC = ({}) => {
   const pathname = usePathname() ?? "";
+  const {isMobile,setIsMobile, open,toggle} = useSidebarStore()
+
+  useEffect(()=>{
+    const handleResize = () => {
+      if(window.innerWidth < 768){
+        setIsMobile(true)
+      }else{
+        setIsMobile(false)
+      }
+    }
+    window.addEventListener("resize",handleResize)
+
+    return () => window.removeEventListener("resize",handleResize)
+  },[])
 
   return (
     <Column
@@ -16,6 +32,14 @@ const Sidebar: React.FC = ({}) => {
       background="page"
       border="neutral-weak"
       radius="l"
+      position={isMobile ? "absolute" : "fixed"}
+      left="0"
+      top="0"
+      zIndex={2}
+      style={{
+        transform: !isMobile || open ? "translateX(0)" : "translateX(-400px)",
+        transition: "transform 0.3s",
+      }}
     >
       <Column fill paddingX="xs" gap="m">
         <Column fillWidth gap="4">
@@ -27,115 +51,24 @@ const Sidebar: React.FC = ({}) => {
           >
             Dashboard
           </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={true}>
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiHouseDuotone" onBackground="neutral-weak" size="xs" />
-              Home
+          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname==="/"}>
+            <Row fillWidth padding="4" vertical="center" gap="12" textVariant="label-default-s">
+              <SmartLink onClick={toggle} fillWidth href="/">
+              <Icon name="home" onBackground="neutral-weak" size="xs" />
+              Historial
+              </SmartLink>
             </Row>
           </ToggleButton>
           <ToggleButton
             fillWidth
             justifyContent="flex-start"
-            selected={pathname === "analytics"}
+            selected={pathname === "/create-order"}
           >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiTrendUpDuotone" onBackground="neutral-weak" size="xs" />
-              Analytics
-            </Row>
-          </ToggleButton>
-          <ToggleButton
-            style={{
-              position: "relative",
-            }}
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "reports"}
-          >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-              <Icon name="PiNotebookDuotone" onBackground="neutral-weak" size="xs" />
-              Reports
-              <Tag
-                variant="neutral"
-                size="s"
-                position="absolute"
-                right="8">
-                New
-              </Tag>
-            </Row>
-          </ToggleButton>
-        </Column>
-
-        <Line/>
-
-        <Column fillWidth gap="4">
-          <Text variant="body-default-xs" onBackground="neutral-weak" marginY="8" marginLeft="16">
-            Management
-          </Text>
-          <ToggleButton
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "users"}
-          >
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-            <Line width="16"/>
-              Users
-            </Row>
-          </ToggleButton>
-          <ToggleButton
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "roles"}
-          >
-            <Row padding="4" vertical="center" gap="12" textVariant="label-default-s">
-            <Line width="16"/>
-              Roles
-            </Row>
-          </ToggleButton>
-          <ToggleButton
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "permissions"}
-          >
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-            <Line width="16"/>
-              Permissions
-            </Row>
-          </ToggleButton>
-        </Column>
-
-        <Line/>
-
-        <Column fill gap="4">
-          <Row
-            fillWidth
-            horizontal="space-between"
-            vertical="center"
-            paddingY="8"
-            paddingX="16"
-          >
-            <Text variant="body-default-xs" onBackground="neutral-weak">
-              Projects
-            </Text>
-            <IconButton tooltip="Create" variant="secondary" icon="plus" size="s" />
-          </Row>
-          <ToggleButton
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "overview"}
-          >
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-            <Line width="16"/>
-              Overview
-            </Row>
-          </ToggleButton>
-          <ToggleButton
-            fillWidth
-            justifyContent="flex-start"
-            selected={pathname === "projects"}
-          >
-            <Row padding="4" gap="12" vertical="center" textVariant="label-default-s">
-              <Line width="16"/>
-              My projects
+            <Row fillWidth padding="4" vertical="center" gap="12" textVariant="label-default-s">
+              <SmartLink onClick={toggle} fillWidth href="/create-order">
+              <Icon name="order" onBackground="neutral-weak" size="xs" />
+              Crear orden medica
+              </SmartLink>
             </Row>
           </ToggleButton>
         </Column>
