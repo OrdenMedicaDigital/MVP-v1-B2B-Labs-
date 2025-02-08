@@ -3,11 +3,11 @@ import {
   Column,
   Flex,
   Heading,
+  Icon,
   Input,
   Row,
+  SmartLink,
 } from "@/once-ui/components";
-import { Header } from "@/once-ui/modules";
-import Link from "next/link";
 
 const data = [
   {
@@ -23,8 +23,11 @@ export default function HomePage() {
   return (
     <Column fillWidth>
       <Column fillWidth maxWidth="xl" padding="l" gap="24">
-        <Row fillWidth>
+        <Row fillWidth fillHeight gap="16" vertical="center">
           <Input id="Serach" label="Search" labelAsPlaceholder />
+          <Button>
+            <Icon fillHeight name="filter" size="s" />
+          </Button>
         </Row>
         <Row fillWidth>
           <Heading as="h2">Ordenes medicas</Heading>
@@ -33,6 +36,7 @@ export default function HomePage() {
           <Column fillWidth>
             {data.map((item, index) => {
               return (
+                <SmartLink href="/order" key={index} fillWidth>
                 <Row key={index} fillWidth gap="8">
                   <Column fillWidth padding="m" background="surface" radius="m">
                   <Row fillWidth>
@@ -61,6 +65,7 @@ export default function HomePage() {
                     </Column>
                   </Column>
                 </Row>
+                </SmartLink>
               );
             })}
           </Column>

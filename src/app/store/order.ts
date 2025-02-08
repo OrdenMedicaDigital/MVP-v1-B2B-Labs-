@@ -1,3 +1,4 @@
+"use client"
 import {create, createStore} from "zustand"
 
 interface Order {

@@ -5,9 +5,19 @@ import { Button, Column, Flex, Heading, Icon, IconButton, Row } from "@/once-ui/
 //Generate a basic layout for the resume page, including, title, pacient, contact, and exam data, with a preview of the order in pdf.
 //Add a button to add exams to the order, and other one for complete and download the order pdf.
 
+const exams = [{
+    name: "Ecografía",
+    code: "2002123",
+    description: "Ecografía de abdomen",
+},
+{
+    name: "Radiografía",
+    code: "20022124",
+    description: "Radiografía de torax",
+},
+]
 
-export default function ResumePage(){
-    const {setData,patient,exams} = useOrderStore()
+export default function OrderPage(){
     return(
         <Flex gap="16" fillWidth wrap>
         <Column gap="16">
@@ -15,16 +25,16 @@ export default function ResumePage(){
             <Column gap="16">
                 <Heading as="h4">Datos del paciente:</Heading>
                 <Column gap="8">
-                    <p>RUT: {patient.rut}</p>
-                    <p>Nombre: {patient.name}</p>
-                    <p>Fecha de nacimiento: {patient.birthDate}</p>
+                    <p>RUT: 232012</p>
+                    <p>Nombre: Juan Perez</p>
+                    <p>Fecha de nacimiento: 21/03/04</p>
                 </Column>
             </Column>
             <Column gap="16">
                 <Heading as="h4">Datos de contacto:</Heading>
                 <Column gap="8">
                     <p>Correo electrónico:
-                        <a href="mailto:" >{patient.email}</a>
+                        <a href="mailto:" >example@gmail.com</a>
                     </p>
                     <p>Teléfono: 12345678</p>
                     <p>Región: Metropolitana</p>
@@ -40,11 +50,6 @@ export default function ResumePage(){
                                 <Heading as="h3">{exam.name}</Heading>
                                 <p>{exam.description}</p>
                             </Column>
-                            <Button onClick={()=>{
-                                setData({exams:exams.filter((item,i)=>i!==index)})
-                            }} >
-                                <Icon name="trash" size="s"/> 
-                            </Button>
                         </Row>
                     )
                 }

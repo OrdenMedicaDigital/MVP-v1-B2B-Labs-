@@ -1,26 +1,37 @@
 "use client";
 
 import { useSidebarStore } from "@/app/store/sidebar";
-import { Column, Icon, IconButton, Line, Row, SmartLink, Tag, Text, ToggleButton } from "@/once-ui/components";
+import {
+  Button,
+  Column,
+  Icon,
+  IconButton,
+  Line,
+  Row,
+  SmartLink,
+  Tag,
+  Text,
+  ToggleButton,
+} from "@/once-ui/components";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Sidebar: React.FC = ({}) => {
   const pathname = usePathname() ?? "";
-  const {isMobile,setIsMobile, open,toggle} = useSidebarStore()
+  const { isMobile, setIsMobile, open, toggle } = useSidebarStore();
 
-  useEffect(()=>{
+  useEffect(() => {
     const handleResize = () => {
-      if(window.innerWidth < 768){
-        setIsMobile(true)
-      }else{
-        setIsMobile(false)
+      if (window.innerWidth < 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
       }
-    }
-    window.addEventListener("resize",handleResize)
+    };
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize",handleResize)
-  },[])
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <Column
@@ -32,7 +43,7 @@ const Sidebar: React.FC = ({}) => {
       background="page"
       border="neutral-weak"
       radius="l"
-      position={isMobile ? "absolute" : "fixed"}
+      position={isMobile ? "fixed" : "fixed"}
       left="0"
       top="0"
       zIndex={2}
@@ -51,11 +62,21 @@ const Sidebar: React.FC = ({}) => {
           >
             Dashboard
           </Text>
-          <ToggleButton fillWidth justifyContent="flex-start" selected={pathname==="/"}>
-            <Row fillWidth padding="4" vertical="center" gap="12" textVariant="label-default-s">
+          <ToggleButton
+            fillWidth
+            justifyContent="flex-start"
+            selected={pathname === "/"}
+          >
+            <Row
+              fillWidth
+              padding="4"
+              vertical="center"
+              gap="12"
+              textVariant="label-default-s"
+            >
               <SmartLink onClick={toggle} fillWidth href="/">
-              <Icon name="home" onBackground="neutral-weak" size="xs" />
-              Historial
+                <Icon name="home" onBackground="neutral-weak" size="xs" />
+                Historial
               </SmartLink>
             </Row>
           </ToggleButton>
@@ -64,13 +85,48 @@ const Sidebar: React.FC = ({}) => {
             justifyContent="flex-start"
             selected={pathname === "/create-order"}
           >
-            <Row fillWidth padding="4" vertical="center" gap="12" textVariant="label-default-s">
+            <Row
+              fillWidth
+              padding="4"
+              vertical="center"
+              gap="12"
+              textVariant="label-default-s"
+            >
               <SmartLink onClick={toggle} fillWidth href="/create-order">
-              <Icon name="order" onBackground="neutral-weak" size="xs" />
-              Crear orden medica
+                <Icon name="order" onBackground="neutral-weak" size="xs" />
+                Crear orden medica
               </SmartLink>
             </Row>
           </ToggleButton>
+          <Row
+            wrap
+            fillWidth
+            padding="4"
+            vertical="center"
+            gap="12"
+            textVariant="label-default-s"
+          >
+            <SmartLink
+              style={{ textWrap: "wrap" }}
+              onClick={toggle}
+              fillWidth
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd5TFaUPG_itEenQ_oU3O4J_v66WaBS4eg6sddmpn_O89MEDw/viewform"
+            >
+              <Button style={{textWrap:"wrap", padding: "8px 0", height:"fit-content"}}>Informe médico de exámenes</Button>
+            </SmartLink>
+          </Row>
+          <Row
+            wrap
+            fillWidth
+            padding="4"
+            vertical="center"
+            gap="12"
+            textVariant="label-default-s"
+            >
+              <SmartLink onClick={toggle} fillWidth href="https://agendamiento.reservo.cl/makereserva/agenda/i0MhpNd0P07vhU3M6B938Mv5R0w7ao">
+                <Button style={{textWrap:"wrap", padding: "8px 0", height:"fit-content"}}>Agendar Hora Médica Evaluación de Examenes</Button>
+              </SmartLink>
+            </Row>
         </Column>
       </Column>
     </Column>

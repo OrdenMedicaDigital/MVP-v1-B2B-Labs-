@@ -1,6 +1,6 @@
 "use client"
 import { useOrderStore } from "@/app/store/order";
-import { Button, Column, Heading, Icon, Input, Row, Text } from "@/once-ui/components";
+import { Button, Checkbox, Column, Heading, Icon, Input, Row, Text } from "@/once-ui/components";
 import { useRouter } from "next/navigation";
 
 
@@ -23,24 +23,34 @@ export default function ExamPage(){
     const router = useRouter()
     return (
         <Column fillWidth gap="16">
-            <Row vertical="center" horizontal="center">
+            <Row vertical="center"  horizontal="space-between">
+                <Button onClick={()=>router.back()}>
+                    <Row gap="8">
+                    <Icon name="go-back" size="s" />
+                    Regresar
+                    </Row>
+                </Button>
             <Button variant="tertiary" >Añadir examen</Button>
+            <Button onClick={()=>router.push("/create-order/resume")}>
+                <Row gap="8">
+                    <Icon name="save" size="s" />
+                    Guardar
+                    </Row>
+                </Button>
             </Row>
             <Input id="search" label="Buscar por examen o procedimiento" />
             <Heading variant="body-strong-s">Busquedas populares</Heading>
             <Column gap="8">
                 {examsData.map((exam, index) => {
                     return (
-                        <Row cursor="pointer" onClick={()=>{
-                            setData({exams:[examsData[index]]})
-                            router.push("/create-order/resume")
-                        }} key={index} gap="8" padding="16" background="surface" radius="m">
-                            <Column fillWidth>
-                                <Heading as="h3" variant="body-default-m">{exam.name}</Heading>
-                                <Text variant="body-default-s">{exam.description}</Text>
-                            </Column>
-                            <Icon name="chevron-right" />
-                        </Row>
+                        <Checkbox
+                        label={exam.name}
+                        description={exam.description}
+                        isChecked={exams.some((item) => item.name === exam.name)}
+                        onToggle={()=>{
+                            setData({exams:exams.some((item) => item.name === exam.name) ? exams.filter((item) => item.name !== exam.name) : [...exams, exam]})
+                        }}
+                        />
                     )
                 })}
             </Column>

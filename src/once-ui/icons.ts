@@ -29,11 +29,13 @@ import {
   HiOutlineShieldCheck,
   HiOutlineSparkles,
   HiHome,
+  HiArrowLeft,
 } from "react-icons/hi2";
 
 import { RiVisaLine } from "react-icons/ri";
 
 import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa6";
+import { HiFilter, HiSave, HiTrash } from "react-icons/hi";
 
 export const iconLibrary: Record<string, IconType> = {
   chevronUp: HiChevronUp,
@@ -69,4 +71,8 @@ export const iconLibrary: Record<string, IconType> = {
   sparkle: HiOutlineSparkles,
   home: HiHome,
   order: HiOutlineClipboard,
+  trash: HiTrash,
+  "go-back": HiArrowLeft,
+  save: HiSave,
+  filter: HiFilter
 };
