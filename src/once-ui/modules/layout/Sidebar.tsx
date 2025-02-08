@@ -98,35 +98,47 @@ const Sidebar: React.FC = ({}) => {
               </SmartLink>
             </Row>
           </ToggleButton>
-          <Row
-            wrap
+          <ToggleButton
             fillWidth
-            padding="4"
-            vertical="center"
-            gap="12"
-            textVariant="label-default-s"
+            justifyContent="flex-start"
+            selected={false}
+            style={{height:"auto"}}
+
           >
-            <SmartLink
-              style={{ textWrap: "wrap" }}
-              onClick={toggle}
+            <Row
               fillWidth
-              href="https://docs.google.com/forms/d/e/1FAIpQLSd5TFaUPG_itEenQ_oU3O4J_v66WaBS4eg6sddmpn_O89MEDw/viewform"
+              padding="4"
+              gap="12"
+              textVariant="label-default-s"
             >
-              <Button style={{textWrap:"wrap", padding: "8px 0", height:"fit-content"}}>Informe médico de exámenes</Button>
-            </SmartLink>
-          </Row>
-          <Row
-            wrap
-            fillWidth
-            padding="4"
-            vertical="center"
-            gap="12"
-            textVariant="label-default-s"
-            >
-              <SmartLink onClick={toggle} fillWidth href="https://agendamiento.reservo.cl/makereserva/agenda/i0MhpNd0P07vhU3M6B938Mv5R0w7ao">
-                <Button style={{textWrap:"wrap", padding: "8px 0", height:"fit-content"}}>Agendar Hora Médica Evaluación de Examenes</Button>
+              <SmartLink style={{textWrap:"wrap"}} onClick={toggle} fillWidth href="/create-order">
+                <Icon name="order" onBackground="neutral-weak" size="xs" />
+                Informe medico de examenes
               </SmartLink>
             </Row>
+          </ToggleButton>
+            <ToggleButton
+            fillWidth
+            justifyContent="flex-start"
+            selected={false}
+            style={{
+              height:"auto"
+            }}
+          >
+            <Row
+              fillWidth
+              padding="4"
+              gap="12"
+              textVariant="label-default-s"
+            >
+              <SmartLink style={{
+                textWrap: "wrap",
+              }} onClick={toggle} fillWidth href="/create-order">
+                <Icon name="order" onBackground="neutral-weak" size="xs" />
+                Agendar Hora Médica Evaluación de Examenes
+              </SmartLink>
+            </Row>
+          </ToggleButton>
         </Column>
       </Column>
     </Column>

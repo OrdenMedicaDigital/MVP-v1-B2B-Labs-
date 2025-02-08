@@ -11,6 +11,6 @@ interface Sidebar {
 export const useSidebarStore = create<Sidebar>((set) => ({
     open: false,
     toggle: () => set((state) => ({ open: !state.open })),
-    isMobile: window.innerWidth < 768,
+    isMobile: false,
     setIsMobile: (isMobile: boolean) => set({ isMobile})
 }));
