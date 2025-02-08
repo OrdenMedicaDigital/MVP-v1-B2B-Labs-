@@ -27,7 +27,7 @@ export default function HomePage() {
           <Input id="Serach" label="Search" labelAsPlaceholder />
           <Button>
             <Icon fillHeight name="filter" size="s" />
-            <Heading as="h4" variant="body-default-s">
+            <Heading color="white" as="h4" variant="body-default-s">
               Filtrar
               </Heading>
           </Button>
