@@ -16,9 +16,9 @@ const style = {
 
 // default metadata
 const meta = {
-  title: "Once UI - Your Personalized Design System for Next.js",
+  title: "Orden Medica Digital",
   description:
-    "An open-source design system and component library for Next.js that emphasizes easy styling and accessibility in UI development.",
+    "Orden Medica Digital es una plataforma que permite a los médicos generar y enviar órdenes médicas de manera digital a sus pacientes.",
 };
 
 // default open graph data
