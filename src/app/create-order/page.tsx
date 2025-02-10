@@ -16,8 +16,12 @@ export default function CreateOrderPage() {
                     setData({patient:{...patient,name:e.target.value}})
                 }} />
                 <Row gap="16">
-                    <Input name="paterno" id="paterno" label="Apellido paterno del paciente:" />
-                    <Input name="materno" id="materno" label="Apellido materno del paciente:" /> 
+                    <Input name="paterno" id="paterno" label="Apellido paterno del paciente:" onChange={e=>{
+                        setData({patient:{...patient,paterno:e.target.value}})
+                    }} />
+                    <Input name="materno" id="materno" label="Apellido materno del paciente:" onChange={e=>{
+                        setData({patient:{...patient,materno:e.target.value}})
+                    }} /> 
                 </Row>
                 <Text variant="body-default-s">Fecha de nacimiento:</Text>
                <Input type="date" name="fecha" id="fecha" label="" onChange={e=>{

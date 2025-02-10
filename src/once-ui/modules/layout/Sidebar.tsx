@@ -112,7 +112,7 @@ const Sidebar: React.FC = ({}) => {
               gap="12"
               textVariant="label-default-s"
             >
-              <SmartLink style={{textWrap:"wrap"}} onClick={toggle} fillWidth href="/create-order">
+              <SmartLink style={{textWrap:"wrap"}} onClick={toggle} fillWidth href="https://docs.google.com/forms/d/e/1FAIpQLSd5TFaUPG_itEenQ_oU3O4J_v66WaBS4eg6sddmpn_O89MEDw/viewform">
                 <Icon name="order" onBackground="neutral-weak" size="xs" />
                 Informe medico de examenes
               </SmartLink>
@@ -134,7 +134,7 @@ const Sidebar: React.FC = ({}) => {
             >
               <SmartLink style={{
                 textWrap: "wrap",
-              }} onClick={toggle} fillWidth href="/create-order">
+              }} onClick={toggle} fillWidth href="https://agendamiento.reservo.cl/makereserva/agenda/i0MhpNd0P07vhU3M6B938Mv5R0w7ao">
                 <Icon name="order" onBackground="neutral-weak" size="xs" />
                 Agendar Hora Médica Evaluación de Examenes
               </SmartLink>

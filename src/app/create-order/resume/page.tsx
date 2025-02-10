@@ -12,8 +12,29 @@ import {
   Text,
 } from "@/once-ui/components";
 
+import { createOrder } from "@/db/queries";
+import { useRouter } from "next/navigation";
+
 export default function ResumePage() {
   const { setData, patient, exams } = useOrderStore();
+  const router = useRouter()
+
+  const handleSave = async () => {
+    fetch("/api/order", {
+        method: "POST",
+        body: JSON.stringify({ patient, exams: exams.map(e=>e.code) }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+    }).then((data) => data.json()).then((data) => {
+        if(data.error){
+            alert(data.error);
+        }else{
+            alert(data.message);
+            router.replace("/");
+        }
+    });
+  }
 
   return (
     <Flex gap="24" fillWidth wrap>
@@ -26,6 +47,8 @@ export default function ResumePage() {
             <Column gap="8">
               <Text>RUT: {patient.rut}</Text>
               <Text>Nombre: {patient.name}</Text>
+                <Text>Apellido paterno: {patient.paterno}</Text>
+                <Text>Apellido materno: {patient.materno}</Text>
               <Text>Fecha de nacimiento: {patient.birthDate}</Text>
             </Column>
           </Column>
@@ -45,10 +68,10 @@ export default function ResumePage() {
                 Correo electrónico:{" "}
                 <a href={`mailto:${patient.email}`}>{patient.email}</a>
               </Text>
-              <Text>Teléfono: 12345678</Text>
-              <Text>Región: Metropolitana</Text>
-              <Text>Comuna: Santiago</Text>
-              <Text>Dirección: Calle Falsa 123</Text>
+              <Text>Teléfono: {patient.phone}</Text>
+              <Text>Región: {patient.region}</Text>
+              <Text>Comuna: {patient.comuna}</Text>
+              <Text>Dirección: {patient.address}</Text>
             </Column>
           </Column>
         </Card>
@@ -92,7 +115,7 @@ export default function ResumePage() {
           <Button variant="secondary" href="/create-order/exam">
             Agregar examen
           </Button>
-          <Button variant="primary">Descargar orden</Button>
+          <Button variant="primary" onClick={handleSave}>Guardar</Button>
         </Row>
       </Column>
     </Flex>

@@ -1,3 +1,5 @@
+import { insertExams } from "@/db/exams";
+import { getAllOrders } from "@/db/queries";
 import {
   Button,
   Column,
@@ -9,17 +11,9 @@ import {
   SmartLink,
 } from "@/once-ui/components";
 
-const data = [
-  {
-    type: "Orden medica",
-    date: "12/12/2021",
-    patient: "Juan Perez",
-    doctor: "Dr. Juan Perez",
-    status: "En proceso",
-  },
-];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const data = await getAllOrders();
   return (
     <Column fillWidth>
       <Column fillWidth maxWidth="xl" padding="l" gap="24">
@@ -42,25 +36,17 @@ export default function HomePage() {
                   <Column fillWidth padding="m" background="surface" radius="m">
                   <Row fillWidth>
                     <Row fillWidth>
-                    <Heading as="h3" variant="body-default-m">
-                      {item.type} | {item.status}
-                    </Heading>
                     </Row>
                     <Row fillWidth horizontal="end" vertical="center">
                     <Heading as="h4" variant="body-default-s">
-                      {item.date}
+                      {item.orderDate}
                     </Heading>
                     </Row>
                   </Row>
                     <Column fillWidth>
                       <Column fillWidth>
                         <Heading as="h4" variant="body-default-xl">
-                          {item.patient}
-                        </Heading>
-                      </Column>
-                      <Column fillWidth>
-                        <Heading as="h4" variant="body-default-s">
-                          {item.doctor}
+                          {item.patient.name}
                         </Heading>
                       </Column>
                     </Column>

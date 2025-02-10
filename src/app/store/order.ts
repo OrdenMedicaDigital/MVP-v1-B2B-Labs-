@@ -4,6 +4,8 @@ import {create, createStore} from "zustand"
 interface Order {
     patient: {
         name: string;
+        paterno:string;
+        materno:string;
         comuna: string;
         region: string;
         address: string;
@@ -24,6 +26,8 @@ interface Order {
 export const useOrderStore = create<Order>((set)=>({
         patient: {
             name: "",
+            paterno:"",
+            materno: "",
             comuna: "",
             region: "",
             address: "",
