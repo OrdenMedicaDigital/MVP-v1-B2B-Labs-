@@ -11,7 +11,7 @@ export default function AnalyticsPage() {
             <Grid columns={4} mobileColumns={1} tabletColumns={2} gap="16">
                 <Card title="Ventas Totales" padding="16">
                     <Column gap="8">
-                        <Text variant="heading-default-xs">Ingresos</Text>
+                        <Text variant="heading-default-xs">Costo mensual</Text>
                         <Text variant="heading-default-xl">$1,000</Text>
                     </Column>
                 </Card>
