@@ -30,6 +30,7 @@ import {
   HiOutlineSparkles,
   HiHome,
   HiArrowLeft,
+  HiCircleStack,
 } from "react-icons/hi2";
 
 import { RiVisaLine } from "react-icons/ri";
@@ -74,5 +75,6 @@ export const iconLibrary: Record<string, IconType> = {
   trash: HiTrash,
   "go-back": HiArrowLeft,
   save: HiSave,
-  filter: HiFilter
+  filter: HiFilter,
+  analytics: HiCircleStack
 };

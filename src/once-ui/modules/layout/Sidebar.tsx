@@ -102,6 +102,24 @@ const Sidebar: React.FC = ({}) => {
           <ToggleButton
             fillWidth
             justifyContent="flex-start"
+            selected={pathname === "/analytics"}
+          >
+            <Row
+              fillWidth
+              padding="4"
+              vertical="center"
+              gap="12"
+              textVariant="label-default-s"
+            >
+              <SmartLink onClick={toggle} fillWidth href="/analytics">
+                <Icon name="analytics" onBackground="neutral-weak" size="xs" />
+                Analytics
+              </SmartLink>
+            </Row>
+          </ToggleButton>
+          <ToggleButton
+            fillWidth
+            justifyContent="flex-start"
             selected={false}
             style={{height:"auto"}}
 

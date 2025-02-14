@@ -104,20 +104,20 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     }, []);
 
     const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
     ];
-    const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    const dayNames = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 
     const handleTimeToggle = (show: boolean) => {
       setIsTransitioning(false);

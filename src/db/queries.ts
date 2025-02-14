@@ -1,7 +1,7 @@
 import "dotenv/config"
 import { drizzle } from "drizzle-orm/neon-http"; // Importa la instancia de Drizzle
 import { patients, orders, orderExams, exams } from "./schema"; // Importa los modelos
-import { eq } from "drizzle-orm";
+import { and, eq, gte, like, lte } from "drizzle-orm";
 
 const db = drizzle(process.env.DATABASE_URL as string); // Instancia de Drizzle
 
@@ -30,7 +30,7 @@ export async function createOrder(patient: Patient, examCodes: string[]) {
 
         // 3. Insertar la orden
         const [newOrder] = await db.insert(orders)
-            .values({ patientRut: patient.rut, date: new Date().toISOString() })
+            .values({ patientRut: patient.rut, date: new Date().toISOString(), state: "pending" })
             .returning({ id: orders.id });
 
         if (!newOrder) {
@@ -57,6 +57,7 @@ export async function getAllOrders() {
         .select({
             orderId: orders.id,
             orderDate: orders.date,
+            orderState: orders.state,
             patient: {
                 rut: patients.rut,
                 name: patients.name,
@@ -68,10 +69,10 @@ export async function getAllOrders() {
                 region: patients.region,
                 comuna: patients.comuna,
                 address: patients.address
-            }
+            },
         })
         .from(orders)
-        .innerJoin(patients, eq(orders.patientRut, patients.rut));
+        .innerJoin(patients, eq(orders.patientRut, patients.rut))
 }
 
 // Obtener una orden por ID con datos del paciente y exámenes
@@ -122,4 +123,26 @@ export async function getOrderById(orderId: number) {
 
 export async function getAllExams() {
     return await db.select().from(exams);
+}
+
+export async function getOrdersByFilter(name?: string, startDate?: string, endDate?: string) {
+    return await db
+        .select({
+            orderId: orders.id,
+            patientRut: patients.rut,
+            patientName: patients.name,
+            patientPaterno: patients.paterno,
+            patientMaterno: patients.materno,
+            date: orders.date,
+            state: orders.state,
+        })
+        .from(orders)
+        .innerJoin(patients, eq(orders.patientRut, patients.rut))
+        .where(
+            and(
+                name ? like(patients.name, `%${name}%`) : undefined,
+                startDate ? gte(orders.date, startDate) : undefined,
+                endDate ? lte(orders.date, endDate) : undefined
+            )
+        );
 }

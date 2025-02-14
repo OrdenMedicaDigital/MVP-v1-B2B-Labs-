@@ -24,6 +24,7 @@ export const orders = pgTable("orders", {
     id: serial().primaryKey(),
     patientRut: varchar().notNull().references(() => patients.rut, { onDelete: "cascade" }),
     date: date().notNull(),
+    state: varchar({enum:["pending","processing","completed"]}).default("pending").notNull(),
 });
 
 export const orderExams = pgTable("order_exams", {

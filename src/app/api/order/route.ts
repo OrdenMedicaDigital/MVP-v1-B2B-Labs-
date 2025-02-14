@@ -1,4 +1,4 @@
-import { createOrder } from "@/db/queries";
+import { createOrder, getAllOrders, getOrderById } from "@/db/queries";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req:NextRequest) => {
@@ -14,4 +14,21 @@ export const POST = async (req:NextRequest) => {
         });
     }
     }
+}
+
+
+export const GET = async (req:NextRequest) => {
+    const orders = await getAllOrders();
+    const mappedOrders = await Promise.all(orders.map(async order => {
+        const data = await getOrderById(order.orderId);
+        return {
+            orderId: data?.orderId,
+            patientName: data?.patient.name,
+            patientPaterno: data?.patient.paterno,
+            patientMaterno: data?.patient.materno,
+            date: data?.orderDate,
+            state: order.orderState,
+            exams: data?.exams
+    }}))
+    return NextResponse.json(mappedOrders);
 }
