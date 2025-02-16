@@ -27,7 +27,7 @@ export default function ContactPage() {
       <Input name="direccion" id="direccion" label="Dirección:" onChange={e=>{
             setData({patient:{...patient,address:e.target.value}})
       }} />
-      <Link href="/create-order/exam" passHref>
+      <Link href="/dashboard/create-order/exam" passHref>
         <Button fillWidth>Continuar</Button>
       </Link>
     </Column>

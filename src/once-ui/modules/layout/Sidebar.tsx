@@ -84,7 +84,7 @@ const Sidebar: React.FC = ({}) => {
           <ToggleButton
             fillWidth
             justifyContent="flex-start"
-            selected={pathname === "/create-order"}
+            selected={pathname === "/dashboard/create-order"}
           >
             <Row
               fillWidth
@@ -93,7 +93,7 @@ const Sidebar: React.FC = ({}) => {
               gap="12"
               textVariant="label-default-s"
             >
-              <SmartLink onClick={toggle} fillWidth href="/create-order">
+              <SmartLink onClick={toggle} fillWidth href="/dashboard/create-order">
                 <Icon name="order" onBackground="neutral-weak" size="xs" />
                 Crear orden medica
               </SmartLink>

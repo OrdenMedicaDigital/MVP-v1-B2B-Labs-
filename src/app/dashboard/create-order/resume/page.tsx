@@ -14,10 +14,37 @@ import {
 
 import { createOrder } from "@/db/queries";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ResumePage() {
   const { setData, patient, exams } = useOrderStore();
+  const [pdf,setPdf] = useState("");
   const router = useRouter()
+
+  const getPreview = async () => {
+    const res = await fetch("/api/pdf/generate", {
+      method: "POST",
+      body: JSON.stringify({ data: {
+        name: patient.name + " " + patient.paterno + " " + patient.materno,
+        rut: patient.rut,
+        age: patient.birthDate,
+        address: patient.address,
+        comuna: patient.comuna,
+        region: patient.region,
+        date: new Date().toLocaleDateString(),
+        exams
+      }}),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await res.json()
+    setPdf(data.data.renderId)
+  }
+
+  useEffect(()=>{
+    getPreview();
+  },[])
 
   const handleSave = async () => {
     fetch("/api/order", {
@@ -105,14 +132,14 @@ export default function ResumePage() {
         <Heading as="h3">Vista previa de la orden</Heading>
         <Card padding="16" background="surface" radius="m">
           <iframe
-            src="/preview.pdf"
+            src={`http://209.46.120.43:4000/render/${pdf}`}
             width="100%"
             height="500px"
             style={{ borderRadius: "8px" }}
           ></iframe>
         </Card>
         <Row gap="16">
-          <Button variant="secondary" href="/create-order/exam">
+          <Button variant="secondary" href="/dashboard/create-order/exam">
             Agregar examen
           </Button>
           <Button variant="primary" onClick={handleSave}>Guardar</Button>

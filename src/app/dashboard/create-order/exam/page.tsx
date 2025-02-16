@@ -41,7 +41,7 @@ export default function ExamPage() {
           </Row>
         </Button>
         <Button variant="tertiary">Añadir examen</Button>
-        <Button onClick={() => router.push("/create-order/resume")}>
+        <Button onClick={() => router.push("/dashboard/create-order/resume")}>
           <Row gap="8">
             <Icon name="save" size="s" />
             Guardar

@@ -1,7 +1,7 @@
 "use client"
 import { Button, Column, DatePicker, Heading, Input, Row, Select, Text } from "@/once-ui/components";
 import Link from "next/link";
-import { useOrderStore } from "../store/order";
+import { useOrderStore } from "@/app/store/order";
 
 export default function CreateOrderPage() {
     const {setData,patient} = useOrderStore();
@@ -28,7 +28,7 @@ export default function CreateOrderPage() {
                      setData({patient:{...patient,birthDate:e.target.value}})
                }} />
             </Column>
-            <Link href="/create-order/contact" passHref>
+            <Link href="/dashboard/create-order/contact" passHref>
                 <Button fillWidth>Continuar</Button>
             </Link>
         </Column>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, Column, Flex, Grid, Heading, Text, Tooltip } from "@/once-ui/components";
+import { Card, Column, Grid, Heading, Text} from "@/once-ui/components";
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function AnalyticsPage() {

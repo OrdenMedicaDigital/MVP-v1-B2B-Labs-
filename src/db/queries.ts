@@ -1,11 +1,10 @@
 import "dotenv/config"
-import { drizzle } from "drizzle-orm/neon-http"; // Importa la instancia de Drizzle
-import { patients, orders, orderExams, exams } from "./schema"; // Importa los modelos
+import { drizzle } from "drizzle-orm/neon-http";
+import { patients, orders, orderExams, exams, labs } from "./schema";
 import { and, eq, gte, like, lte } from "drizzle-orm";
 
-const db = drizzle(process.env.DATABASE_URL as string); // Instancia de Drizzle
+const db = drizzle(process.env.DATABASE_URL as string);
 
-// Definir el tipo del paciente
 interface Patient {
     rut: string;
     name: string;
@@ -17,40 +16,39 @@ interface Patient {
     region: string;
     comuna: string;
     address: string;
+    labId: number;
 }
 
-// Función para crear una orden con paciente y exámenes
+export async function getAllLabs(){
+    return await db.select().from(labs);
+}
+
 export async function createOrder(patient: Patient, examCodes: string[]) {
-        const existingPatient = await db.select().from(patients).where(eq(patients.rut, patient.rut));
+    const existingPatient = await db.select().from(patients).where(eq(patients.rut, patient.rut));
 
-        if (existingPatient.length === 0) {
-            // 2. Insertar el paciente si no existe
-            await db.insert(patients).values(patient);
-        }
+    if (existingPatient.length === 0) {
+        await db.insert(patients).values(patient);
+    }
 
-        // 3. Insertar la orden
-        const [newOrder] = await db.insert(orders)
-            .values({ patientRut: patient.rut, date: new Date().toISOString(), state: "pending" })
-            .returning({ id: orders.id });
+    const [newOrder] = await db.insert(orders)
+        .values({ patientRut: patient.rut, date: new Date().toISOString(), state: "pending", labId: patient.labId })
+        .returning({ id: orders.id });
 
-        if (!newOrder) {
-            throw new Error("Order creation failed");
-        }
+    if (!newOrder) {
+        throw new Error("Order creation failed");
+    }
 
-        // 4. Insertar los exámenes relacionados
-        if (examCodes.length > 0) {
-            console.log(examCodes)
-            await db.insert(orderExams).values(
-                examCodes.map((examCode) => ({
-                    orderId: newOrder.id,
-                    examCode:examCode,
-                }))
-            );
-        }
+    if (examCodes.length > 0) {
+        await db.insert(orderExams).values(
+            examCodes.map((examCode) => ({
+                orderId: newOrder.id,
+                examCode: examCode,
+            }))
+        );
+    }
 
-        return newOrder;
+    return newOrder;
 }
-
 
 export async function getAllOrders() {
     return await db
@@ -68,16 +66,19 @@ export async function getAllOrders() {
                 phone: patients.phone,
                 region: patients.region,
                 comuna: patients.comuna,
-                address: patients.address
+                address: patients.address,
+            },
+            lab: {
+                id: labs.id,
+                name: labs.name,
             },
         })
         .from(orders)
         .innerJoin(patients, eq(orders.patientRut, patients.rut))
+        .innerJoin(labs, eq(orders.labId, labs.id));
 }
 
-// Obtener una orden por ID con datos del paciente y exámenes
 export async function getOrderById(orderId: number) {
-    // 1. Obtener la orden con el paciente
     const order = await db
         .select({
             orderId: orders.id,
@@ -92,32 +93,36 @@ export async function getOrderById(orderId: number) {
                 phone: patients.phone,
                 region: patients.region,
                 comuna: patients.comuna,
-                address: patients.address
-            }
+                address: patients.address,
+            },
+            lab: {
+                id: labs.id,
+                name: labs.name,
+            },
         })
         .from(orders)
         .innerJoin(patients, eq(orders.patientRut, patients.rut))
+        .innerJoin(labs, eq(orders.labId, labs.id))
         .where(eq(orders.id, orderId))
         .limit(1);
 
     if (order.length === 0) {
-        return null; // No se encontró la orden
+        return null;
     }
 
-    // 2. Obtener los exámenes relacionados
     const examsList = await db
         .select({
             examCode: exams.code,
             examName: exams.name,
-            description: exams.description
+            description: exams.description,
         })
         .from(orderExams)
         .innerJoin(exams, eq(orderExams.examCode, exams.code))
         .where(eq(orderExams.orderId, orderId));
 
     return {
-        ...order[0], // Información de la orden y paciente
-        exams: examsList // Lista de exámenes relacionados
+        ...order[0],
+        exams: examsList,
     };
 }
 
@@ -135,9 +140,11 @@ export async function getOrdersByFilter(name?: string, startDate?: string, endDa
             patientMaterno: patients.materno,
             date: orders.date,
             state: orders.state,
+            labName: labs.name,
         })
         .from(orders)
         .innerJoin(patients, eq(orders.patientRut, patients.rut))
+        .innerJoin(labs, eq(orders.labId, labs.id))
         .where(
             and(
                 name ? like(patients.name, `%${name}%`) : undefined,

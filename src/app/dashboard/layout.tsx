@@ -80,67 +80,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Flex
-      as="html"
-      lang="en"
-      background="page"
-      data-neutral={style.neutral}
-      data-brand={style.brand}
-      data-accent={style.accent}
-      data-border={style.border}
-      data-theme={style.theme}
-      data-solid={style.solid}
-      data-solid-style={style.solidStyle}
-      data-surface={style.surface}
-      data-transition={style.transition}
-      data-scaling={style.scaling}
-      className={classNames(
-        primary.variable,
-        code.variable,
-        secondary ? secondary.variable : "",
-        tertiary ? tertiary.variable : ""
-      )}
-    >
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(schemaData),
-          }}
-        />
-      </head>
-      <ToastProvider>
-        <Row as="body" fillWidth margin="0" padding="0">
-          <Background
-            position="absolute"
-            mask={{
-              x: 100,
-              y: 0,
-              radius: 100,
-            }}
-            gradient={{
-              display: true,
-              x: 100,
-              y: 60,
-              width: 70,
-              height: 50,
-              tilt: -40,
-              opacity: 90,
-              colorStart: "accent-background-strong",
-              colorEnd: "page-background",
-            }}
-            grid={{
-              display: true,
-              opacity: 100,
-              width: "0.25rem",
-              color: "neutral-alpha-medium",
-              height: "0.25rem",
-            }}
-            zIndex={-1}
-          />
-          {children}
-        </Row>
-      </ToastProvider>
-    </Flex>
+        <>
+        <Sidebar/>
+        <Main>          {children}</Main>
+        </>
   );
 }
