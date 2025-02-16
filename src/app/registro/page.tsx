@@ -68,8 +68,8 @@ export default function EmpresaRegistro() {
   const handleNext = () => setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
-  const addUsuario = () => setUsuarios([...usuarios, { nombre: '', rol: '' }]);
-  const updateUsuario = (index: number, field: 'nombre' | 'rol', value: string) => {
+  const addUsuario = () => setUsuarios([...usuarios, { nombre: '', rol: '', password: '' }]);
+  const updateUsuario = (index: number, field: 'nombre' | 'rol' | 'password', value: string) => {
     const newUsuarios = [...usuarios];
     newUsuarios[index][field] = value;
     setUsuarios(newUsuarios);
@@ -81,14 +81,14 @@ export default function EmpresaRegistro() {
       {step === 0 && (
         <Flex direction='column' gap='12'>
           <Heading>Datos de la Empresa</Heading>
-          <Input label='Nombre' value={empresa.nombre} onChange={(e) => setEmpresa({ ...empresa, nombre: e.target.value })} />
-          <Input label='Dirección' value={empresa.direccion} onChange={(e) => setEmpresa({ ...empresa, direccion: e.target.value })} />
-          <Input label='Contacto' value={empresa.contacto} onChange={(e) => setEmpresa({ ...empresa, contacto: e.target.value })} />
-          <Input label='Correo' value={empresa.correo} onChange={(e) => setEmpresa({ ...empresa, correo: e.target.value })} />
-          <Input label='RUT' value={empresa.rut} onChange={(e) => setEmpresa({ ...empresa, rut: e.target.value })} />
-          <Input label='Razón Social' value={empresa.razonSocial} onChange={(e) => setEmpresa({ ...empresa, razonSocial: e.target.value })} />
-          <Input label='Encargado' value={empresa.encargado} onChange={(e) => setEmpresa({ ...empresa, encargado: e.target.value })} />
-          <Input label='Teléfono/WhatsApp' value={empresa.telefono} onChange={(e) => setEmpresa({ ...empresa, telefono: e.target.value })} />
+          <Input id='empresa' label='Nombre' value={empresa.nombre} onChange={(e) => setEmpresa({ ...empresa, nombre: e.target.value })} />
+          <Input id='address' label='Dirección' value={empresa.direccion} onChange={(e) => setEmpresa({ ...empresa, direccion: e.target.value })} />
+          <Input id='contacto' label='Contacto' value={empresa.contacto} onChange={(e) => setEmpresa({ ...empresa, contacto: e.target.value })} />
+          <Input id='email' label='Correo' value={empresa.correo} onChange={(e) => setEmpresa({ ...empresa, correo: e.target.value })} />
+          <Input id='rut' label='RUT' value={empresa.rut} onChange={(e) => setEmpresa({ ...empresa, rut: e.target.value })} />
+          <Input id='razon' label='Razón Social' value={empresa.razonSocial} onChange={(e) => setEmpresa({ ...empresa, razonSocial: e.target.value })} />
+          <Input id='encargado' label='Encargado' value={empresa.encargado} onChange={(e) => setEmpresa({ ...empresa, encargado: e.target.value })} />
+          <Input id='tel' label='Teléfono/WhatsApp' value={empresa.telefono} onChange={(e) => setEmpresa({ ...empresa, telefono: e.target.value })} />
         </Flex>
       )}
       {step === 1 && (
