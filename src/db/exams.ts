@@ -2,7 +2,7 @@ import "dotenv/config"; // Cargar las variables de entorno
 import fs from "fs";
 import path from "path";
 import csv from "csv-parser";
-import { drizzle } from "drizzle-orm/neon-http"; // Importa la instancia de Drizzle
+import { drizzle } from "drizzle-orm/node-postgres"; // Importa la instancia de Drizzle
 import { exams } from "./schema";
 import { eq } from "drizzle-orm";
 
@@ -19,7 +19,6 @@ async function readCSV(filePath:string) : Promise<{code:string,name:string,descr
         fs.createReadStream(filePath)
             .pipe(csv({ separator: "," })) // Asegurar el delimitador correcto
             .on("data", (data) => {
-                console.log(data);
                 results.push({
                     code: data["Código"],
                     name: data["Nombre del Examen"],
@@ -42,12 +41,9 @@ export async function insertExams() {
         }
 
         examList.forEach( async (exam) => {
-
-
-        if(await db.select().from(exams).where(eq(exams.code, exam.code))){
-            console.log("Los exámenes ya han sido insertados.");
-            return;
-        }
+            console.log("Insertando exámenes...");
+            const e = await db.select().from(exams).where(eq(exams.code, exam.code));
+            console.log(e)
 
         await db.insert(exams).values(exam);
     })

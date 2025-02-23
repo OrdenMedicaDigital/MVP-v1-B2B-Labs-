@@ -108,19 +108,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         onMonthChange={handleMonthChange}
         onHover={setHoveredDate}
       />
-      <DatePicker
-        value={internalValue.endDate}
-        onChange={handleDateChange}
-        range={getPreviewRange() || internalValue}
-        minDate={minDate}
-        maxDate={maxDate}
-        previousMonth={false}
-        size={size}
-        currentMonth={getSecondMonth().getMonth()}
-        currentYear={getSecondMonth().getFullYear()}
-        onMonthChange={handleMonthChange}
-        onHover={setHoveredDate}
-      />
     </Flex>
   );
 };

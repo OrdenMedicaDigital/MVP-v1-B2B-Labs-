@@ -5,21 +5,21 @@ import {
   Column,
   Flex,
   Heading,
-  Icon,
   IconButton,
   Row,
   Card,
   Text,
 } from "@/once-ui/components";
-
-import { createOrder } from "@/db/queries";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ResumePage() {
   const { setData, patient, exams } = useOrderStore();
   const [pdf,setPdf] = useState("");
   const router = useRouter()
+  const {data} = useSession()
+  console.log(data)
 
   const getPreview = async () => {
     const res = await fetch("/api/pdf/generate", {
@@ -29,8 +29,8 @@ export default function ResumePage() {
         rut: patient.rut,
         age: patient.birthDate,
         address: patient.address,
-        comuna: patient.comuna,
-        region: patient.region,
+        comuna: patient.comuna.name,
+        region: patient.region.name,
         date: new Date().toLocaleDateString(),
         exams
       }}),
@@ -47,9 +47,9 @@ export default function ResumePage() {
   },[])
 
   const handleSave = async () => {
-    fetch("/api/order", {
+    fetch("/api/order/save", {
         method: "POST",
-        body: JSON.stringify({ patient, exams: exams.map(e=>e.code) }),
+        body: JSON.stringify({ patient, exams: exams, labId:data?.user.labId}),
         headers: {
           "Content-Type": "application/json",
         },
@@ -58,7 +58,7 @@ export default function ResumePage() {
             alert(data.error);
         }else{
             alert(data.message);
-            router.replace("/");
+            router.replace("/dashboard");
         }
     });
   }
@@ -96,8 +96,8 @@ export default function ResumePage() {
                 <a href={`mailto:${patient.email}`}>{patient.email}</a>
               </Text>
               <Text>Teléfono: {patient.phone}</Text>
-              <Text>Región: {patient.region}</Text>
-              <Text>Comuna: {patient.comuna}</Text>
+              <Text>Región: {patient.region.name}</Text>
+              <Text>Comuna: {patient.comuna.name}</Text>
               <Text>Dirección: {patient.address}</Text>
             </Column>
           </Column>
@@ -132,7 +132,7 @@ export default function ResumePage() {
         <Heading as="h3">Vista previa de la orden</Heading>
         <Card padding="16" background="surface" radius="m">
           <iframe
-            src={`http://209.46.120.43:4000/render/${pdf}`}
+            src={`/api/pdf?pdf=${pdf}`}
             width="100%"
             height="500px"
             style={{ borderRadius: "8px" }}

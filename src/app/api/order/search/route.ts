@@ -2,8 +2,8 @@ import { getOrderById, getOrdersByFilter } from "@/db/queries";
 import { NextRequest, NextResponse } from "next/server"
 
 export const POST = async (req:NextRequest) => {
-    const {name, startDate, endDate} = await req.json();
-    const orders = await getOrdersByFilter(name, startDate, endDate);
+    const {name, startDate, endDate,labId} = await req.json();
+    const orders = await getOrdersByFilter(labId,name, startDate, endDate);
     const mappedOrders = await Promise.all(orders.map(async order => {
         const data = await getOrderById(order.orderId);
         return {

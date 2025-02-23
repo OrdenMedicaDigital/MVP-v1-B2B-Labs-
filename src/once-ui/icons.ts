@@ -35,8 +35,9 @@ import {
 
 import { RiVisaLine } from "react-icons/ri";
 
-import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa6";
-import { HiFilter, HiSave, HiTrash } from "react-icons/hi";
+import { FaDiscord, FaGithub, FaGoogle, FaMoneyBill } from "react-icons/fa6";
+import { HiFilter, HiLogout, HiSave, HiTrash } from "react-icons/hi";
+import { FaEdit } from "react-icons/fa";
 
 export const iconLibrary: Record<string, IconType> = {
   chevronUp: HiChevronUp,
@@ -76,5 +77,9 @@ export const iconLibrary: Record<string, IconType> = {
   "go-back": HiArrowLeft,
   save: HiSave,
   filter: HiFilter,
-  analytics: HiCircleStack
+  analytics: HiCircleStack,
+  info: HiInformationCircle,
+  billing: FaMoneyBill,
+  logout: HiLogout,
+  edit: FaEdit
 };

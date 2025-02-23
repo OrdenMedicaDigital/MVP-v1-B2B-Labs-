@@ -1,19 +1,8 @@
 "use client"
-import {create, createStore} from "zustand"
+import {create} from "zustand"
 
 interface Order {
-    patient: {
-        name: string;
-        paterno:string;
-        materno:string;
-        comuna: string;
-        region: string;
-        address: string;
-        email: string;
-        phone: string;
-        rut: string;
-        birthDate: string;
-    };
+    patient: Patient;
     exams: {
         code: string;
         name: string;
@@ -28,13 +17,21 @@ export const useOrderStore = create<Order>((set)=>({
             name: "",
             paterno:"",
             materno: "",
-            comuna: "",
-            region: "",
+            comuna: {
+                id: 0,
+                name: "",
+            },
+            region: {
+                id: 0,
+                name: "",
+            },
             address: "",
             email: "",
             phone: "",
             rut:"",
             birthDate: "",
+            countryId: 1,
+            labId:0
         },
         exams: [],
         date: new Date(),

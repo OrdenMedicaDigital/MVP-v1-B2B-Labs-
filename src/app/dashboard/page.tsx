@@ -14,6 +14,7 @@ import {
   Spinner,
   Text,
 } from "@/once-ui/components";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -32,12 +33,13 @@ export default function HomePage() {
     }[]
   >([]);
   const [loading,setLoading] = useState<boolean>(false);
+  const {data:session} = useSession()
 
   const handleFilter = async () => {
     setLoading(true);
     fetch("/api/order/search", {
       method: "POST",
-      body: JSON.stringify({ name: search, startDate, endDate }),
+      body: JSON.stringify({ name: search, startDate, endDate, labId: session?.user.labId }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -52,12 +54,18 @@ export default function HomePage() {
 
   useEffect(()=>{
     setLoading(true);
-    fetch("/api/order").then((data) => data.json()).then((data) => {
+    fetch("/api/order",{
+      method:"POST",
+      body: JSON.stringify({labId:session?.user.labId}),
+      headers:{
+        "Content-Type":"application/json"
+      }
+    }).then((data) => data.json()).then((data) => {
       setData(data);
     }).finally(()=>{
       setLoading(false);
     })
-  },[])
+  },[session])
 
   return (
     <Column fillWidth>
@@ -89,7 +97,7 @@ export default function HomePage() {
             {!loading && data.length > 0 ? data.map((item, index) => {
               return (
                 <SmartLink
-                  href={`/order/${item.orderId}`}
+                  href={`/dashboard/order/${item.orderId}`}
                   key={index}
                   fillWidth
                 >
@@ -117,7 +125,7 @@ export default function HomePage() {
                           Estado:{" "}
                           {item.state === "pending"
                             ? "Pendiente"
-                            : item.state === "completed"
+                            : item.state === "finished"
                             ? "Completado"
                             : "En proceso"}
                         </Text>

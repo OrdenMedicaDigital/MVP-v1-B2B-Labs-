@@ -13,6 +13,7 @@ import {
   Text,
   ToggleButton,
 } from "@/once-ui/components";
+import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -47,7 +48,7 @@ const Sidebar: React.FC = ({}) => {
       position={isMobile ? "fixed" : "fixed"}
       left="0"
       top="0"
-      zIndex={2}
+      zIndex={10}
       style={{
         transform: !isMobile || open ? "translateX(0)" : "translateX(-400px)",
         transition: "transform 0.3s",
@@ -63,8 +64,51 @@ const Sidebar: React.FC = ({}) => {
           >
             Dashboard
           </Text>
+          <ToggleButton
+            fillWidth
+            justifyContent="flex-start"
+            selected={false}
+            style={{
+              height: "auto",
+            }}
+          >
+            <Row fillWidth padding="4" gap="12" textVariant="label-default-s">
+              <SmartLink
+                style={{
+                  textWrap: "wrap",
+                }}
+                onClick={toggle}
+                fillWidth
+                href="/admin/dashboard"
+              >
+                <Icon name="home" onBackground="neutral-weak" size="xs" />
+                Inicio
+              </SmartLink>
+            </Row>
+          </ToggleButton>
         </Column>
       </Column>
+      <ToggleButton
+            fillWidth
+            justifyContent="flex-start"
+            selected={pathname === "/"}
+          >
+            <Row
+              fillWidth
+              padding="4"
+              vertical="center"
+              gap="12"
+              textVariant="label-default-s"
+            >
+              <SmartLink onClick={async e=>{
+                await signOut()
+                toggle()
+              }} fillWidth href="/">
+                <Icon name="logout" onBackground="neutral-weak" size="xs" />
+                Cerrar sesion
+              </SmartLink>
+            </Row>
+          </ToggleButton>
     </Column>
   );
 };

@@ -82,7 +82,7 @@ export default function RootLayout({
   return (
         <>
         <Sidebar/>
-        <Main>          {children}</Main>
+        <Main>{children}</Main>
         </>
   );
 }

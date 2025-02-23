@@ -1,8 +1,26 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button, Input, Select, Card, Flex, Heading, Text, Row, Grid, Column } from '@/once-ui/components';
-import dynamic from 'next/dynamic';
+import { useEffect, useState } from "react";
+import {
+  Button,
+  Input,
+  Select,
+  Card,
+  Flex,
+  Heading,
+  Text,
+  Row,
+  Grid,
+  Column,
+  Icon,
+  Toast,
+  PasswordInput,
+} from "@/once-ui/components";
+import dynamic from "next/dynamic";
+import api from "@/api";
+import { redirect } from "next/navigation";
+import { plans } from "@/db/schema";
+import { usePlanStore } from "../store/plan";
 
 const Stepper = dynamic(() => import("@/components/Stepper"), { ssr: false });
 
@@ -17,122 +35,290 @@ interface Empresa {
   telefono: string;
 }
 
-interface Plan {
-  name: string;
-  orders: number | string;
-  price: number | string;
-  pricePerOrder: number | string | null;
-}
-
-const steps = ['Datos de la Empresa', 'Definir Roles', 'Seleccionar Plan'];
-const plans: Plan[] = [
-  { name: 'Pack 50', orders: 50, price: 108405, pricePerOrder: 2168.10 },
-  { name: 'Pack 100', orders: 100, price: 214620, pricePerOrder: 2146 },
-  { name: 'Pack 200', orders: 200, price: 426900, pricePerOrder: 2134.50 },
-  { name: 'Pack 300', orders: 300, price: 636900, pricePerOrder: 2123 },
-  { name: 'Pack 400', orders: 400, price: 844600, pricePerOrder: 2111.50 },
-  { name: 'Pack Estándar', orders: 500, price: 1050000, pricePerOrder: 2100 },
-  { name: 'Pack 600', orders: 600, price: 1257660, pricePerOrder: 2096.10 },
-  { name: 'Pack 700', orders: 700, price: 1464540, pricePerOrder: 2092.20 },
-  { name: 'Pack 800', orders: 800, price: 1670640, pricePerOrder: 2088.30 },
-  { name: 'Pack Premium', orders: 1000, price: 2080500, pricePerOrder: 2080.50 },
-  { name: 'Pack Enterprise', orders: '2000+', price: 'Negociable', pricePerOrder: null }
-];
-
-const formatCurrency = (value: number | string) => {
-    if (typeof value === 'number') {
-      return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
-    }
-    return value;
-  };
+const steps = ["Datos de la Empresa", "Definir Roles", "Contrato"];
 
 export default function EmpresaRegistro() {
   const [step, setStep] = useState<number>(0);
+  const [showCreatingUser, setShowCreatingUser] = useState<boolean>(false);
+  const [userCreated, setUserCreated] = useState<boolean>(false);
+  const {setLabId} = usePlanStore()
   const [empresa, setEmpresa] = useState<Empresa>({
-    nombre: '',
-    direccion: '',
-    contacto: '',
-    correo: '',
-    rut: '',
-    razonSocial: '',
-    encargado: '',
-    telefono: ''
+    nombre: "",
+    direccion: "",
+    contacto: "",
+    correo: "",
+    rut: "",
+    razonSocial: "",
+    encargado: "",
+    telefono: "",
   });
-  const [usuarios, setUsuarios] = useState<{ nombre: string; rol: string, password: string }[]>([{
-    nombre: "Administrador",
-    rol: "Admin",
-    password: "admin"
-  }]);
-  const [plan, setPlan] = useState<string | null>(null);
+  const [usuarios, setUsuarios] = useState<
+    {
+      email: string;
+      rol: "Admin" | "Recepcionista" | "Gerente general" | string;
+      password: string;
+    }[]
+  >([
+    {
+      email: "",
+      rol: "Admin",
+      password: "admin",
+    },
+  ]);
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const handleNext = () =>
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
-  const addUsuario = () => setUsuarios([...usuarios, { nombre: '', rol: '', password: '' }]);
-  const updateUsuario = (index: number, field: 'nombre' | 'rol' | 'password', value: string) => {
+  const addUsuario = () =>
+    setUsuarios([...usuarios, { email: "", rol: "Admin", password: "" }]);
+  const updateUsuario = (
+    index: number,
+    field: "email" | "rol" | "password",
+    value: "Admin" | "Recepcionista" | "Gerente general" | string
+  ) => {
     const newUsuarios = [...usuarios];
     newUsuarios[index][field] = value;
     setUsuarios(newUsuarios);
   };
 
+  useEffect(()=>{
+    if(showCreatingUser){
+      fetch("/api/labs",{
+        method: "POST",
+        body: JSON.stringify({
+          lab:{
+          name: empresa.nombre,
+          address: empresa.direccion,
+          phone: empresa.telefono,
+          email: empresa.correo,
+          rut: empresa.rut,
+          razon_social: empresa.razonSocial,
+          encargado: empresa.encargado,
+          },
+          users: usuarios
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((data) => data.json()).then((data) => {
+        if(data.error){
+          alert(data.error);
+        }else{
+          setShowCreatingUser(false);
+          setUserCreated(true);
+          setLabId(data.labId);
+          setTimeout(() => {
+            redirect("/checkout");
+          }, 3000);
+        }
+      }
+      )
+    }
+  })
+
+
+
   return (
-    <Flex radius='l' background='neutral-weak' shadow='m' direction='column' fillWidth maxWidth={"s"} padding='24' gap='12' margin='24'>
-        <Stepper step={step} steps={steps} />
+    <Flex
+      radius="l"
+      background="neutral-weak"
+      shadow="m"
+      direction="column"
+      fillWidth
+      maxWidth={"s"}
+      padding="24"
+      gap="12"
+      margin="24"
+    >
+      <Stepper step={step} steps={steps} />
       {step === 0 && (
-        <Flex direction='column' gap='12'>
-          <Heading>Datos de la Empresa</Heading>
-          <Input id='empresa' label='Nombre' value={empresa.nombre} onChange={(e) => setEmpresa({ ...empresa, nombre: e.target.value })} />
-          <Input id='address' label='Dirección' value={empresa.direccion} onChange={(e) => setEmpresa({ ...empresa, direccion: e.target.value })} />
-          <Input id='contacto' label='Contacto' value={empresa.contacto} onChange={(e) => setEmpresa({ ...empresa, contacto: e.target.value })} />
-          <Input id='email' label='Correo' value={empresa.correo} onChange={(e) => setEmpresa({ ...empresa, correo: e.target.value })} />
-          <Input id='rut' label='RUT' value={empresa.rut} onChange={(e) => setEmpresa({ ...empresa, rut: e.target.value })} />
-          <Input id='razon' label='Razón Social' value={empresa.razonSocial} onChange={(e) => setEmpresa({ ...empresa, razonSocial: e.target.value })} />
-          <Input id='encargado' label='Encargado' value={empresa.encargado} onChange={(e) => setEmpresa({ ...empresa, encargado: e.target.value })} />
-          <Input id='tel' label='Teléfono/WhatsApp' value={empresa.telefono} onChange={(e) => setEmpresa({ ...empresa, telefono: e.target.value })} />
+        <Flex direction="column" gap="12">
+          <Heading>Registrar Laboratorio</Heading>
+          <Input
+            id="empresa"
+            label="Nombre"
+            value={empresa.nombre}
+            onChange={(e) => setEmpresa({ ...empresa, nombre: e.target.value })}
+          />
+          <Input
+            id="address"
+            label="Dirección"
+            value={empresa.direccion}
+            onChange={(e) =>
+              setEmpresa({ ...empresa, direccion: e.target.value })
+            }
+          />
+          <Input
+            id="email"
+            label="Correo"
+            value={empresa.correo}
+            onChange={(e) => setEmpresa({ ...empresa, correo: e.target.value })}
+          />
+          <Input
+            id="rut"
+            label="RUT"
+            value={empresa.rut}
+            onChange={(e) => setEmpresa({ ...empresa, rut: e.target.value })}
+          />
+          <Input
+            id="razon"
+            label="Razón Social"
+            value={empresa.razonSocial}
+            onChange={(e) =>
+              setEmpresa({ ...empresa, razonSocial: e.target.value })
+            }
+          />
+          <Input
+            id="encargado"
+            label="Encargado"
+            value={empresa.encargado}
+            onChange={(e) =>
+              setEmpresa({ ...empresa, encargado: e.target.value })
+            }
+          />
+          <Input
+            id="tel"
+            label="Teléfono/WhatsApp"
+            value={empresa.telefono}
+            onChange={(e) =>
+              setEmpresa({ ...empresa, telefono: e.target.value })
+            }
+          />
         </Flex>
       )}
       {step === 1 && (
-        <div>
-          <h2>Definir Roles</h2>
-          {usuarios.map((usuario, index) => (
-            <Column gap='8' key={index}>
-                <Row gap='8'>
-                <Input id='nombre' label='Nombre' value={usuario.nombre} onChange={(e) => updateUsuario(index, 'nombre', e.target.value)} />
-              <Select label='Seleccionar rol:' id='role' options={[{label:"Admin",value:"Admin"},{
-                label: "Recepcionista",
-                value: "Recepcionista"
-              },{
-                label:"Dueño",
-                value:"Dueño"
-              }]} value={usuario.rol} onChange={(value) => updateUsuario(index, 'rol', value.target.value)} />
+        <Column gap="8">
+          <Heading variant="heading-strong-m">Definir Roles</Heading>
+          <Column gap="16">
+            {usuarios.map((usuario, index) => (
+              <Column gap="8" key={index}>
+                <Row gap="8">
+                  <Input
+                    id="email"
+                    label="Correo"
+                    type="email"
+                    value={usuario.email}
+                    onChange={(e) =>
+                      updateUsuario(index, "email", e.target.value)
+                    }
+                  />
+                  <Select
+                    label="Seleccionar rol:"
+                    id="role"
+                    options={[
+                      { label: "Admin", value: "Admin" },
+                      {
+                        label: "Recepcionista",
+                        value: "Recepcionista",
+                      },
+                      {
+                        label: "Gerente general",
+                        value: "Gerente General",
+                      },
+                    ]}
+                    value={usuario.rol}
+                    onSelect={(value) =>
+                      updateUsuario(
+                        index,
+                        "rol",
+                        value as "Admin" | "Recepcionista" | "Gerente General"
+                      )
+                    }
+                    onChange={(event) =>
+                      updateUsuario(
+                        index,
+                        "rol",
+                        event.target.value as
+                          | "Admin"
+                          | "Recepcionista"
+                          | "Dueño"
+                      )
+                    }
+                  />
                 </Row>
-                <Input type='password' id='password' label='Contraseña' value={usuario.password} onChange={(e) => updateUsuario(index, 'password', e.target.value)} />
-            </Column>
-          ))}
+                <PasswordInput
+                  id="password"
+                  label="Contraseña"
+                  value={usuario.password}
+                  onChange={(e) =>
+                    updateUsuario(index, "password", e.target.value)
+                  }
+                />
+                <Flex
+                  fillWidth
+                  height={0.6}
+                  radius="l"
+                  background="accent-alpha-medium"
+                ></Flex>
+              </Column>
+            ))}
+          </Column>
           <Button onClick={addUsuario}>Agregar Usuario</Button>
-        </div>
+        </Column>
       )}
       {step === 2 && (
-        <div>
-          <h2>Seleccionar Plan</h2>
-          <Grid gap='8' columns={3} tabletColumns={2} mobileColumns={1}>
-            {plans.map((p) => (
-              <Card radius='l' direction='column' padding='8' gap='4' key={p.name} className={`p-4 cursor-pointer ${plan === p.name ? 'border-2 border-blue-500' : ''}`} onClick={() => setPlan(p.name)}>
-                <Heading variant='body-strong-xl'>{p.name}</Heading>
-                <Text variant='body-default-s'>Órdenes: {p.orders}</Text>
-                <Row gap='4'>
-                <Text variant='body-default-s'>{formatCurrency(p.price)} neto (no incluye IVA)</Text>
-                <Text variant='body-default-s'>{p.pricePerOrder && `(${formatCurrency(p.pricePerOrder)}/orden)`}</Text>
-                </Row>
-              </Card>
-            ))}
-          </Grid>
-        </div>
+        <Card radius="m" padding="16" gap="8">
+          <Column padding="8" gap="8" horizontal="center">
+            <Heading variant="heading-strong-xl">Contrato</Heading>
+            <Text variant="body-default-s">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+              bibendum, nunc nec gravida aliquam, nunc odio gravida nunc, ac
+              consequat lorem dolor sit amet ipsum. Donec bibendum, nunc nec
+              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
+              sit amet ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing
+              elit. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
+              nunc, ac consequat lorem dolor sit amet ipsum. Donec bibendum,
+              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
+              lorem dolor sit amet ipsum.Lorem ipsum dolor sit amet, consectetur
+              adipiscing elit. Donec bibendum, nunc nec gravida aliquam, nunc
+              odio gravida nunc, ac consequat lorem dolor sit amet ipsum. Donec
+              bibendum, nunc nec gravida aliquam, nunc odio gravida nunc, ac
+              consequat lorem dolor sit amet ipsum.Lorem ipsum dolor sit amet,
+              consectetur adipiscing elit. Donec bibendum, nunc nec gravida
+              aliquam, nunc odio gravida nunc, ac consequat lorem dolor sit amet
+              ipsum. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
+              nunc, ac consequat lorem dolor sit amet ipsum.Lorem ipsum dolor
+              sit amet, consectetur adipiscing elit. Donec bibendum, nunc nec
+              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
+              sit amet ipsum. Donec bibendum, nunc nec gravida aliquam, nunc
+              odio gravida nunc, ac consequat lorem dolor sit amet ipsum.Lorem
+              ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum,
+              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
+              lorem dolor sit amet ipsum. Donec bibendum, nunc nec gravida
+              aliquam, nunc odio gravida nunc, ac consequat lorem dolor sit amet
+              ipsum.Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Donec bibendum, nunc nec gravida aliquam, nunc odio gravida nunc,
+              ac consequat lorem dolor sit amet ipsum. Donec bibendum, nunc nec
+              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
+              sit amet ipsum.Lorem ipsum dolor sit amet, consectetur adipiscing
+              elit. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
+              nunc, ac consequat lorem dolor sit amet ipsum. Donec bibendum,
+              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
+              lorem dolor sit amet ipsum.
+            </Text>
+            <Flex vertical="center" gap="8" horizontal="center">
+              <Icon name="info"></Icon>
+              <Text variant="body-default-s">
+                Al dar click acepta las condiciones del contrato
+              </Text>
+            </Flex>
+            <Button onClick={() => setShowCreatingUser(true)}>Firmar</Button>
+          </Column>
+        </Card>
       )}
-      <Flex gap='8'>
+      <Flex gap="8">
         {step > 0 && <Button onClick={handleBack}>Atrás</Button>}
-        {step < steps.length - 1 ? <Button onClick={handleNext}>Siguiente</Button> : <Button onClick={() => console.log({ empresa, usuarios, plan })}>Finalizar</Button>}
+        {step < steps.length - 1 && step != 2 && (
+          <Button onClick={handleNext}>Siguiente</Button>
+        )}
       </Flex>
+      {showCreatingUser && (
+        <Toast variant="success">Creando laboratorio...</Toast>
+      )}
+      {userCreated && (
+        <Toast variant="success">Laboratorio creado con exito</Toast>
+      )}
     </Flex>
   );
 }

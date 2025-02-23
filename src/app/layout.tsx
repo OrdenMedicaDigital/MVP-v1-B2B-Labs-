@@ -4,6 +4,7 @@ import "@/once-ui/tokens/index.scss";
 import classNames from "classnames";
 import { headers } from "next/headers";
 import { Metadata } from "next";
+import "./globals.css"
 
 import {
   baseURL,
@@ -23,9 +24,11 @@ import {
 
 import { Inter } from "next/font/google";
 import { Roboto_Mono } from "next/font/google";
-import { Header, Sidebar } from "@/once-ui/modules";
-import BlackBackround from "@/components/BlackBaground";
-import Main from "@/components/Main";
+import SessionProviderClient from "@/components/SessionProviderClient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { Providers } from "./providers";
+import { insertExams } from "@/db/exams";
 
 const primary = Inter({
   variable: "--font-primary",
@@ -74,11 +77,13 @@ const schemaData = {
   sameAs: Object.values(social).filter(Boolean),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <Flex
       as="html"
@@ -138,7 +143,11 @@ export default function RootLayout({
             }}
             zIndex={-1}
           />
+          <Providers>
+          <SessionProviderClient session={session}>
           {children}
+          </SessionProviderClient>
+          </Providers>
         </Row>
       </ToastProvider>
     </Flex>
