@@ -1,4 +1,3 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Graficas from "@/components/Graficas";
 import Prepago from "@/components/Prepago";
 import { db, getOrdersByFilter, getPatientsLab, getTotalExams } from "@/db/queries";
@@ -8,6 +7,7 @@ import { Card, Column, Grid, Heading, Text } from "@/once-ui/components";
 import { FaClipboardList, FaDollarSign, FaUserInjured, FaVial } from "react-icons/fa";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/nextauth";
 
 export default async function AnalyticsPage() {
   const session = await getServerSession(authOptions);

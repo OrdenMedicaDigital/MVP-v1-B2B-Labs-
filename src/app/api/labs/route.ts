@@ -2,7 +2,8 @@ import { createLab, createUser, db } from "@/db/queries";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/nextauth";
+
 import { labs } from "@/db/schema";
 import { eq } from "drizzle-orm";
 

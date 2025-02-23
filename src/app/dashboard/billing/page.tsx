@@ -1,5 +1,5 @@
 import api from "@/api";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/nextauth";
 import { getBillingInfo } from "@/db/queries";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { Button, Card, Flex, Heading } from "@/once-ui/components";

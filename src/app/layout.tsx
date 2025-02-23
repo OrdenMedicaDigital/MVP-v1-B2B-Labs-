@@ -26,9 +26,8 @@ import { Inter } from "next/font/google";
 import { Roboto_Mono } from "next/font/google";
 import SessionProviderClient from "@/components/SessionProviderClient";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/nextauth";
 import { Providers } from "./providers";
-import { insertExams } from "@/db/exams";
 
 const primary = Inter({
   variable: "--font-primary",

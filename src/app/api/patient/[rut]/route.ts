@@ -1,7 +1,7 @@
 import { getComunas, getPatientInfo, getRegiones } from "@/db/queries";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/nextauth";
 
 export const GET = async (req:NextRequest,{params}:{
     params: Promise<{rut:string}>
