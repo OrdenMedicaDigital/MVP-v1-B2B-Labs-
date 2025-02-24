@@ -200,7 +200,7 @@ export async function getPlanById(id: number) {
 }
 
 export async function getPlans(){
-    return await db.select().from(plans);
+    return await db.select().from(plans).orderBy(plans.id);
 }
 
 
