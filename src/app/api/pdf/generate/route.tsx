@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 
-const templateId = "ba7da132c4b3f2463803b6cdf5353ae040a998eae38bd67045f8198ed1ae5587"
+const templateId = "36e0a1f19a0c1fac40cd13d7e83fbd897fa51626a954b337b6279ac6b4906b20"
 
 export const POST = async (req:NextRequest) => {
     const {data} = await req.json()
