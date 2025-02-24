@@ -14,12 +14,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+
+const dateToAge = (birtDate:Date)=>{
+    const diff = Date.now() - birtDate.getTime();
+    const age = new Date(diff);
+    return Math.abs(age.getUTCFullYear() - 1970);
+}
+
 export default function ResumePage() {
   const { setData, patient, exams } = useOrderStore();
   const [pdf,setPdf] = useState("");
   const router = useRouter()
   const {data} = useSession()
-  console.log(data)
 
   const getPreview = async () => {
     const res = await fetch("/api/pdf/generate", {
@@ -27,7 +33,7 @@ export default function ResumePage() {
       body: JSON.stringify({ data: {
         name: patient.name + " " + patient.paterno + " " + patient.materno,
         rut: patient.rut,
-        age: patient.birthDate,
+        age: dateToAge(new Date(patient.birthDate)) + " años",
         address: patient.address,
         comuna: patient.comuna.name,
         region: patient.region.name,
