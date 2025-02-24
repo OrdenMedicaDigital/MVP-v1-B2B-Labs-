@@ -261,42 +261,7 @@ export default function EmpresaRegistro() {
         <Card radius="m" padding="16" gap="8">
           <Column padding="8" gap="8" horizontal="center">
             <Heading variant="heading-strong-xl">Contrato</Heading>
-            <Text variant="body-default-s">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-              bibendum, nunc nec gravida aliquam, nunc odio gravida nunc, ac
-              consequat lorem dolor sit amet ipsum. Donec bibendum, nunc nec
-              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
-              sit amet ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
-              nunc, ac consequat lorem dolor sit amet ipsum. Donec bibendum,
-              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
-              lorem dolor sit amet ipsum.Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit. Donec bibendum, nunc nec gravida aliquam, nunc
-              odio gravida nunc, ac consequat lorem dolor sit amet ipsum. Donec
-              bibendum, nunc nec gravida aliquam, nunc odio gravida nunc, ac
-              consequat lorem dolor sit amet ipsum.Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Donec bibendum, nunc nec gravida
-              aliquam, nunc odio gravida nunc, ac consequat lorem dolor sit amet
-              ipsum. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
-              nunc, ac consequat lorem dolor sit amet ipsum.Lorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Donec bibendum, nunc nec
-              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
-              sit amet ipsum. Donec bibendum, nunc nec gravida aliquam, nunc
-              odio gravida nunc, ac consequat lorem dolor sit amet ipsum.Lorem
-              ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum,
-              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
-              lorem dolor sit amet ipsum. Donec bibendum, nunc nec gravida
-              aliquam, nunc odio gravida nunc, ac consequat lorem dolor sit amet
-              ipsum.Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Donec bibendum, nunc nec gravida aliquam, nunc odio gravida nunc,
-              ac consequat lorem dolor sit amet ipsum. Donec bibendum, nunc nec
-              gravida aliquam, nunc odio gravida nunc, ac consequat lorem dolor
-              sit amet ipsum.Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Donec bibendum, nunc nec gravida aliquam, nunc odio gravida
-              nunc, ac consequat lorem dolor sit amet ipsum. Donec bibendum,
-              nunc nec gravida aliquam, nunc odio gravida nunc, ac consequat
-              lorem dolor sit amet ipsum.
-            </Text>
+            <iframe src="/contrato.pdf" width="100%" height="500px"></iframe>
             <Flex vertical="center" gap="8" horizontal="center">
               <Icon name="info"></Icon>
               <Text variant="body-default-s">
