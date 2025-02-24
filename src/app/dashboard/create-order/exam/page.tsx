@@ -5,6 +5,7 @@ import {
   Button,
   Checkbox,
   Column,
+  Dialog,
   Heading,
   Icon,
   Input,
@@ -18,6 +19,8 @@ export default function ExamPage() {
   const { setData, exams } = useOrderStore();
   const [examsData, setExamsData] = useState<typeof exams>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [addingExam,setAddingExam] = useState<boolean>(false);
+  const [examData,setExamData] = useState<{code:string,name:string,description:string}>({code:"",name:"",description:""});
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +33,20 @@ export default function ExamPage() {
         setLoading(false);
       });
   }, []);
+
+  const handleCreateExam = () => {
+    fetch("/api/exams", {
+      method: "POST",
+      body: JSON.stringify(examData),
+    })
+      .then((data) => data.json())
+      .then((data) => {
+        setExamsData([...examsData, data]);
+        setAddingExam(false);
+      }).finally(()=>{
+        alert("Examen creado correctamente")
+      })
+  }
 
   return (
     <Column fillWidth gap="16">
@@ -77,6 +94,20 @@ export default function ExamPage() {
           </Column>
         </>
       )}
+      <Dialog title="Añadir examen" isOpen={addingExam} onClose={()=>setAddingExam(false)}>
+        <Column gap="16">
+        <Input id="code" label="Código"  onChange={(e)=>{
+          setExamData({...examData,code:e.target.value})
+        }}/>
+        <Input id="name" label="Nombre" onChange={e=>{
+          setExamData({...examData,name:e.target.value})
+        }} />
+        <Input id="description" label="Descripción" onChange={e=>{
+          setExamData({...examData,description:e.target.value})
+        }} />
+        <Button variant="tertiary" onClick={handleCreateExam}>Guardar</Button>
+         </Column>
+      </Dialog>
     </Column>
   );
 }
