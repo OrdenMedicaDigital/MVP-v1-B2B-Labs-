@@ -261,7 +261,7 @@ export default function EmpresaRegistro() {
         <Card radius="m" padding="16" gap="8">
           <Column padding="8" gap="8" horizontal="center">
             <Heading variant="heading-strong-xl">Contrato</Heading>
-            <iframe src="/contrato.pdf" width="100%" height="500px"></iframe>
+            <iframe src="/Contrato.pdf" width="100%" height="500px"></iframe>
             <Flex vertical="center" gap="8" horizontal="center">
               <Icon name="info"></Icon>
               <Text variant="body-default-s">
