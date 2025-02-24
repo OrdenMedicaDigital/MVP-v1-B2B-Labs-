@@ -65,7 +65,12 @@ export default function ExamPage() {
           </Row>
         </Button>
       </Row>
-      <Input id="search" label="Buscar por examen o procedimiento" />
+      <Input onChange={e=>{
+        fetch("/api/exams").then(data=>data.json()).then(data=>{
+          if(e.target.value === "") return setExamsData(data);
+          setExamsData(data.filter((item:{name:string})=>item.name.toLowerCase().includes(e.target.value)))
+        })
+      }} id="search" label="Buscar por examen o procedimiento" />
       {loading && <Text>Cargando...</Text>}
       {!loading && examsData.length === 0 && (
         <Text>No hay examenes disponibles</Text>
