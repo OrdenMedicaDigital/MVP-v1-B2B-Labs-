@@ -55,7 +55,7 @@ export default function ResumePage() {
   const handleSave = async () => {
     fetch("/api/order/save", {
         method: "POST",
-        body: JSON.stringify({ patient, exams: exams, labId:data?.user.labId}),
+        body: JSON.stringify({ patient, exams: exams, labId:data?.user.labId, date: new Date().toDateString() }),
         headers: {
           "Content-Type": "application/json",
         },

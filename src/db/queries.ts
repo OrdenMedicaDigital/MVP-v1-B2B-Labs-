@@ -25,7 +25,7 @@ export async function getAllLabs(){
     return await db.select().from(labs);
 }
 
-export async function createOrder(patient: Patient, examCodes: string[]) {
+export async function createOrder(patient: Patient, examCodes: string[],date:string) {
     const existingPatient = await db.select().from(patients).where(eq(patients.rut, patient.rut));
 
     if (existingPatient.length === 0) {
@@ -39,7 +39,7 @@ export async function createOrder(patient: Patient, examCodes: string[]) {
     }
 
     const [newOrder] = await db.insert(orders)
-        .values({ patientRut: patient.rut, date: new Date().toDateString(), state: "pending", labId: patient.labId })
+        .values({ patientRut: patient.rut, date: date ,state: "pending", labId: patient.labId })
         .returning({ id: orders.id });
 
     if (!newOrder) {
@@ -63,8 +63,13 @@ export async function createOrder(patient: Patient, examCodes: string[]) {
     }else{
         const [{totalAmountDue}] = await db.select().from(labBilling).where(eq(labBilling.labId,patient.labId)).limit(1)
 
+        // Calculate new price: 1600 + 16% IVA (sales tax)
+        const basePrice = 1600;
+        const iva = basePrice * 0.16; // 16% IVA (sales tax)
+        const totalPrice = basePrice + iva;
+        
         await db.update(labBilling).set({
-            totalAmountDue: totalAmountDue + 2190
+            totalAmountDue: (Number(totalAmountDue) + Number(totalPrice)).toString()
         }).where(eq(labBilling.labId,patient.labId))
     }
 

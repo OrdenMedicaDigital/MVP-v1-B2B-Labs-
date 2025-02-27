@@ -12,6 +12,7 @@ export default function ContactPage() {
 
 
   useEffect(()=>{
+    if(patient.region!==undefined)
     fetch(`/api/comunas`,{
       method:"POST",
       body:JSON.stringify({regionId:patient.region.id}),
@@ -22,6 +23,7 @@ export default function ContactPage() {
       setComunas(data)
     })
   },[patient.region])
+
 
   return (
     <Column fillWidth gap="16">
