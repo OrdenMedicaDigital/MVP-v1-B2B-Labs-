@@ -258,14 +258,20 @@ export default function EmpresaRegistro() {
         </Column>
       )}
       {step === 2 && (
-        <Card radius="m" padding="16" gap="8">
-          <Column padding="8" gap="8" horizontal="center">
+        <Card radius="m" padding="16" gap="8" fillWidth>
+          <Column padding="8" gap="8" horizontal="center" fillWidth>
             <Heading variant="heading-strong-xl">Contrato</Heading>
             <iframe src="/Contrato.pdf" width="100%" height="500px"></iframe>
             <Flex vertical="center" gap="8" horizontal="center">
               <Icon name="info"></Icon>
               <Text variant="body-default-s">
                 Al dar click acepta las condiciones del contrato
+              </Text>
+            </Flex>
+            <Flex vertical="center" gap="8" horizontal="center">
+              <Icon name="info"></Icon>
+              <Text variant="body-default-s">
+                Al firmar, sera redirigido a la página de pago para seleccionar su plan de uso.
               </Text>
             </Flex>
             <Button onClick={() => setShowCreatingUser(true)}>Firmar</Button>
